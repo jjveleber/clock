@@ -37,9 +37,9 @@ void setupTimers() {
 	
 	// Set Compare match register to timer count for 1 second
 	// ((1 s) / (6.4e-5 s)) -1
-	// 15 for about 1 millisecond
-	// 15624 1 second
-	OCR5A =  15; //lower number for simulator //15624; 
+	// 15 = about 1 millisecond
+	// 15624 = 1 second
+	OCR5A =  15; //lower number for simulator
 	
 	// Turn on CTC mode
 	TCCR5B |= (1 << WGM52);
