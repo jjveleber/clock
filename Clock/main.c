@@ -6,7 +6,6 @@
  */ 
 
 #define F_CPU 16000000UL 
-#define TIMER_RESOLUTION (1/(F_CPU/64))
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -14,7 +13,7 @@
 void setupTimers();
 void setupIO();
 
-ISR(TIMER1_COMPA_vect) {
+ISR(TIMER5_COMPA_vect) {
 	PORTD ^= (1 << PD7);
 }
 
@@ -30,24 +29,28 @@ int main(void) {
 void setupTimers() {
 	cli();
 	
+	// ***************************** TIMER 5 *************************>>>>
 	// Initialize Timer
 	// Clear TCCR registers
-	TCCR1A = 0; 
-	TCCR1B = 0;
+	TCCR5A = 0; 
+	TCCR5B = 0;
 	
 	// Set Compare match register to timer count for 1 second
 	// ((1 s) / (6.4e-5 s)) -1
-	OCR1A =  1/TIMER_RESOLUTION; //(1/6.4e-5f) - 1; //15624; 
+	// 15 for about 1 millisecond
+	// 15624 1 second
+	OCR5A =  15; //lower number for simulator //15624; 
 	
 	// Turn on CTC mode
-	TCCR1B |= (1 << WGM12);
+	TCCR5B |= (1 << WGM52);
 	
-	// Set 64 prescalar bits
-	TCCR1B |= (1 << CS10);
-	TCCR1B |= (1 << CS11);
+	// Set 1024 prescalar bits
+	TCCR5B |= (1 << CS50);
+	TCCR5B |= (1 << CS52);
 	
 	// Enable Timer compare interrupt
-	TIMSK1 |= (1 << OCIE1A);
+	TIMSK5 |= (1 << OCIE5A);
+	// <<<<************************* TIMER 5 *****************************
 	
 	sei();
 }
